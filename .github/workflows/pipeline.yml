@@ -46,6 +46,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: apply -f deploy/new_kube-manifest-replace.yaml --validate=false
       - name: Restart deployment
@@ -53,6 +55,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: rollout restart deployment ${{ steps.get_app_name.outputs.appName }}-prez-deployment
       - name: Get newest pod name
@@ -60,6 +64,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: get pod --sort-by=.metadata.creationTimestamp -l app=${{ steps.get_app_name.outputs.appName }} -o jsonpath="{.items[-1:].metadata.name}" > podName.txt
       - name: Save pod name to variable
@@ -71,6 +77,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: exec ${{ steps.save_pod_name.outputs.podName }} -- sh -c 'rm -rf /app/prez/theme/*'
       - name: Copy theme files
@@ -78,6 +86,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: cp theme/ ${{ steps.save_pod_name.outputs.podName }}:/app/prez/
       - name: Deploy real manifest
@@ -85,6 +95,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: apply -f deploy/new_kube-manifest.yaml --validate=false
       - name: Restart deployment
@@ -92,6 +104,8 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+          KUBECTL_VERSION: "v1.22.0"
+          IAM_VERSION: "0.5.6"
         with:
           args: rollout restart deployment ${{ steps.get_app_name.outputs.appName }}-prez-deployment
       # === docker ===
